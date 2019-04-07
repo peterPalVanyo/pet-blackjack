@@ -9,17 +9,26 @@ function createDeck() {
     let deck = [];
     for (let idxSuits = 0; idxSuits < suits.length; idxSuits++) {
         for (let idxValues = 0; idxValues < values.length; idxValues++) {
-            deck.push(values[idxValues]  + " of " + suits[idxSuits]);
+            let card = {
+                suit: suits[idxSuits],
+                value: values[idxValues]
+            };
+            deck.push( card );
         }
     }
     return deck;
 }
 
+let deck = createDeck();
+
 function getNextCard(){
     return deck.shift();
-}
 
-let deck = createDeck();
+}
+function getCardString(card){
+    return card.value + " of " + card.suit;
+
+}
 
 // for(let i = 0; i < deck.length; i++){
 //     console.log(deck[i]);
@@ -27,4 +36,7 @@ let deck = createDeck();
 
 let playerCards = [getNextCard(), getNextCard()];
 
-console.log(playerCards);
+console.log("your cards: ");
+console.log("  " + getCardString(playerCards[0]) );
+console.log("  " + getCardString(playerCards[1]) );
+
