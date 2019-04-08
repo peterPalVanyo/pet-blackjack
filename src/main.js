@@ -113,7 +113,32 @@ function updateScore(){
 }
 
 function checkForEndOfGame() {
-    
+    updateScore();
+
+    if(gameOver){
+        while (dealerScore < playerScore && playerScore < 21 && dealerScore < 21){
+            dealerCards.push(getNextCard());
+            updateScore();
+        }
+    }
+
+    if(playerScore > 21){
+        playerWon = false;
+        gameOver = true;
+    } else if( dealerScore > 21){
+        playerWon = true;
+        gameOver = true;
+    } else if(gameOver){
+        if(playerScore > dealerScore){
+            playerWon = true;
+        } else{
+            playerWon = false;
+        }
+
+        // newGameButton.style.display = `inline`;
+        // hitButton.style.display = `none`;
+        // stayButton.style.display = `none`;
+    }
 }
 
 
