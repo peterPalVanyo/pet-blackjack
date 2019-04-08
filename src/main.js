@@ -31,27 +31,6 @@ stayButton.style.display = `none`;
 showStatus();
 
 
-newGameButton.addEventListener(`click`, function () {
-    gameStarted = true;
-    gameOver = false;
-    playerWon = false;
-
-    deck = createDeck();
-    suffleDeck(deck);
-    playerCards = [getNextCard(), getNextCard()];
-    dealerCards = [getNextCard(), getNextCard()];
-
-    for (let i = 0; i < deck.length; i++) {
-        textArea.innerText += `\n` + getCardString(deck[i]);
-    }
-
-    newGameButton.style.display = `none`;
-    hitButton.style.display = `inline`;
-    stayButton.style.display = `inline`;
-    showStatus();
-});
-
-
 
 //functions
 
@@ -85,6 +64,37 @@ function getCardString(card) {
 function showStatus() {
     if (!gameStarted) {
         textArea.innerText = "Welcome to Blackjack";
+        return;
+    }
+    let dealerCardString = "";
+    for(let i = 0; i < dealerCards.length; i++){
+        dealerCardString += dealerCards[i] + `\n`;
+    }
+    let playerCardString = "";
+    for(let i = 0; i < playerCards.length; i++){
+        playerCardString += playerCards[i] + `\n`;
+    }
+
+    updateScore();
+
+    textArea.innerText =
+        "Dealer has:\n " +
+        dealerCardString +
+        "(score " + dealerScore + ")\n\n" +
+
+        "Player has:\n " +
+        playerCardString +
+        "(score " + playerScore + ")\n\n";
+
+    if(gameOver){
+        if(playerWon){
+            textArea.innerText += "YOU WIN!";
+        } else{
+            textArea.innerText += "THE DEALER WINS!";
+        }
+        newGameButton.style.display = `inline`;
+        hitButton.style.display = `none`;
+        stayButton.style.display = `none`;
     }
 }
 
@@ -92,6 +102,71 @@ function showStatus() {
 function getNextCard() {
     return deck.shift();
 }
+
+function getCardNumericValue(card){
+    switch (card.value) {
+        case `Ace`:
+            return 1;
+        case `Two`:
+            return 2;
+        case `Three`:
+            return 3;
+        case `Four`:
+            return 4;
+        case `Five`:
+            return 5;
+        case `Six`:
+            return 6;
+        case `Seven`:
+            return 7;
+        case `Eight`:
+            return 8;
+        case `Nine`:
+            return 9;
+        default:
+            return 10;
+    }
+}
+
+function getScore(cardsArray) {
+    let score = 0;
+    let hasAce = false;
+    for(let i =0; i < cardsArray.length; i++){
+        let card = cardsArray[i];
+        score += getCardNumericValue(card);
+        if(card.value === `Ace`){
+            hasAce = true;
+        }
+    }
+    if(hasAce && score + 10 <= 21){
+        return score + 10;
+    }
+    return score;
+}
+
+function updateScore(){
+    dealerScore = getScore(dealerCards);
+    playerScore = getScore(playerCards);
+}
+
+//actions
+
+newGameButton.addEventListener(`click`, function () {
+    gameStarted = true;
+    gameOver = false;
+    playerWon = false;
+
+    deck = createDeck();
+    suffleDeck(deck);
+    playerCards = [getNextCard(), getNextCard()];
+    dealerCards = [getNextCard(), getNextCard()];
+
+
+    newGameButton.style.display = `none`;
+    hitButton.style.display = `inline`;
+    stayButton.style.display = `inline`;
+    showStatus();
+});
 
 // for(let i = 0; i < deck.length; i++){
 //     console.log(deck[i]);
